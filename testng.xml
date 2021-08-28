@@ -4,7 +4,6 @@
   <test thread-count="5" name="Test" parallel="classes">
     <classes>
       <class name="tests.SanityTest"/>
-      <class name="tests.LoginPageTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
