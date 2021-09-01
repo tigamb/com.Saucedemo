@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Suite">
-  <test thread-count="5" name="Test" parallel="classes">
-    <classes>
-      <class name="tests.SanityTest"/>
-    </classes>
-  </test> <!-- Test -->
+	<listeners>
+		<listener class-name="utilities.Listener"></listener>
+	</listeners>
+	<test thread-count="5" name="Test" parallel="classes">
+		<!-- <parameter name="browser" value="Firefox"></parameter>
+		<parameter name="baseUrl" value="https://www.saucedemo.com"></parameter> -->
+		<classes>
+			<class name="tests.SanityTest" />
+		</classes>
+	</test> <!-- Test -->
 </suite> <!-- Suite -->

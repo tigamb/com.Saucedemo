@@ -4,51 +4,75 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import io.qameta.allure.Description;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Issue;
+import io.qameta.allure.Link;
+import io.qameta.allure.Owner;
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
+import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import pageobjects.CartPage;
 import pageobjects.FinishPage;
 import pageobjects.InventoryItemPage;
 import pageobjects.InventoryPage;
 import pageobjects.LoginPage;
 import pageobjects.YourInfoPage;
-import utils.Excel;
+import utilities.AllureAttachment;
+import utilities.Excel;
 
 
 public class SanityTest extends BaseTest {
 	
-	@Test(dataProvider="sendData",enabled = true, priority = 1, description = "Invalid user name and password")
+	@Owner("Danny Ambaou")
+	@Link("https://www.saucedemo.com/") // Create link to the page
+	@TmsLink("") // link to Jira / Trello etc..
+	@Severity(SeverityLevel.NORMAL)
+	@Issue("1")
+	@Story("Should return error when a user tries to enter with invalid details")
+	@Test(dataProvider="sendData",enabled = true, priority = 1, description = "Invalid login")
+	@Description("Login with invalid username and password - expect error")
 	public void tc01_failedLoginNo_1(String username, String password ) {
-		LoginPage lg = new LoginPage(driver);
+		LoginPage lp = new LoginPage(driver);
 		//lg.login("sard_user", "12345");
-		lg.login(username, password);
-		String expected = "Epic sadface: Username and password do not match any user in this service";
-		String actual = lg.getErrMsg();
+		lp.login(username, password);
+		String expected = "Epic sadface: Username and password do not match user in this service";
+		String actual = lp.getErrMsg();
 		Assert.assertEquals(actual,expected);
-		lg.refreshCurrnetPage(); // refresh current page to wipe all data from the fields and get the correct error message
+		AllureAttachment.attachText("TEST TEST");
+		lp.refreshCurrnetPage(); // refresh current page to wipe all data from the fields and get the correct error message
 		
 	}
-
-	@Test(enabled = false, priority = 2, description = "Try to connect with user name only")
+	
+	@Severity(SeverityLevel.BLOCKER)
+	@Test(enabled = true, priority = 2, description = "failed login")
+	@Description("Login without inserting password - expect error")
 	public void tc01_failedLoginNo_2() {
-		LoginPage lg2 = new LoginPage(driver);
-		lg2.login("standard_user", ""); // Enter user
+		LoginPage lp2 = new LoginPage(driver);
+		lp2.login("standard_user", ""); // Enter user
 		String expected = "Epic sadface: Password is required";
-		String actual = lg2.getErrMsg();
+		String actual = lp2.getErrMsg();
 		Assert.assertEquals(actual, expected);
-		lg2.refreshCurrnetPage(); // refresh current page to wipe all data from the fields and get the correct error message
+		lp2.refreshCurrnetPage(); // refresh current page to wipe all data from the fields and get the correct error message
 	}
 	
-	
-	@Test(enabled = false, priority = 3, description = "Try to connect with password only")
+	@Severity(SeverityLevel.BLOCKER)
+	@Test(enabled = true, priority = 3, description = "failed login")
+	@Description("Login without inserting username - expect error")
 	public void tc01_failedLoginNo_3() {
-		LoginPage lg3 = new LoginPage(driver);
-		lg3.login("", "secret_sauce"); // Enter password
-		String expected = "Epic sadface: Username is required";
-		String actual = lg3.getErrMsg();
+		LoginPage lp3 = new LoginPage(driver);
+		lp3.login("", "secret_sauce"); // Enter password
+		String expected = "Epic sadface: Username i required";
+		String actual = lp3.getErrMsg();
 		Assert.assertEquals(actual, expected);
-		lg3.refreshCurrnetPage(); // refresh current page to wipe all data from the fields and get the correct error message
+		lp3.refreshCurrnetPage(); // refresh current page to wipe all data from the fields and get the correct error message
 	}
 	
-	@Test(enabled = true, priority = 4, description = "SUCCESS LOGIN")
+	@Severity(SeverityLevel.BLOCKER)
+	@Test(enabled = true, priority = 4, description = "Login with valid details")
+	@Description("Login with valid username and password - success login")
 	public void tco1_successLogin() {
 		LoginPage lp = new LoginPage(driver);
 		//lp.isLoginPage();
@@ -57,7 +81,7 @@ public class SanityTest extends BaseTest {
 		Assert.assertTrue(ip.isProductPage("Products"));
 		
 	}
-
+	
 	@Test(priority = 5, description = "Pick an item")
 	public void tc02_pickAnItem() {
 		InventoryPage ip = new InventoryPage(driver);
@@ -65,26 +89,31 @@ public class SanityTest extends BaseTest {
 		
 	}
 	
+	@Epic("Products")
+	@Feature("Add to cart")
 	@Test(priority = 6, description = "add an item to your cart")
 	public void tc03__addItemsToCart() {
 		InventoryItemPage iip = new InventoryItemPage(driver);
 		iip.addToCart();
 		iip.openCart();
 	}
-
+	
+	@Epic("Cart")
+	@Feature("Checkout")
 	@Test(priority = 7, description = " Click on checkout button")
 	public void tc04_checkout() {
 		CartPage cp = new CartPage(driver);
 		cp.checkOut();
 	}
 	
-	@Test(priority = 8, description = " Insert valide details and click continue")
+	
+	@Test(priority = 8, description = " Insert valid details and click continue")
 	public void tc05_insertYourInfo() {
 		YourInfoPage yip = new YourInfoPage(driver);
 		yip.enterValidDetails("danny", "test", "123456");
 
 	}
-
+	
 	@Test(priority = 9, description = " Click finish button to complete your order")
 	public void tc06_completeOrder() {
 		FinishPage fp = new FinishPage(driver);
@@ -96,6 +125,7 @@ public class SanityTest extends BaseTest {
 	}
 	
 	@Test(enabled=true, priority=10, description = "Verify you are on products page and buy few items")
+	@Description("Add more than 2 items to the cart")
 	public void tc07_buyAnotherItem() {
 		InventoryPage ip = new InventoryPage(driver); // Create InventoryPage object 
 		Assert.assertTrue(ip.isProductPage("Products")); // Verify you are on products page
@@ -123,12 +153,13 @@ public class SanityTest extends BaseTest {
 			return myData;
 	}
 	
-	@DataProvider
+	@DataProvider // CHEKC FOR MORE DETAILS ONLINE
 	public Object[][] getDataFromExcel(){
-			String excelPath = System.getProperty("user.dir") + "/src/test/resources/data/input.xlsx";
+			String excelPath = System.getProperty("user.dir") + "\\src\\test\\resources\\data\\input.xlsx";
 			Object[][] table = Excel.getTableArray(excelPath, "Login");
 			return table;
 	}
+	
 	
 
 }

@@ -7,12 +7,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 
+import io.qameta.allure.Step;
+
 
 public abstract class BasePage {
 
 	WebDriver driver;
 	JavascriptExecutor js;
-
+	
 	// constructor
 	public BasePage(WebDriver driver) {
 		this.driver = driver;
@@ -21,6 +23,7 @@ public abstract class BasePage {
 	}
 	
 	// fill text method
+	@Step()
 	public void fillText(WebElement el, String text) {
 		el.clear();
 		// js.executeScript("arguments[0].setAttribute('style', 'background-color:yellow; border: 1px solid blue;');", el);
@@ -29,6 +32,7 @@ public abstract class BasePage {
 	}
 
 	// click method
+	@Step()
 	public void click(WebElement el) {
 		// js.executeScript("arguments[0].setAttribute('style', 'border: 1px solid green;');", el);
 		highlightElement(el, "orange");
@@ -36,6 +40,7 @@ public abstract class BasePage {
 	}
 
 	// get method
+	@Step()
 	public String getText(WebElement el) {
 		// js.executeScript("arguments[0].setAttribute('style', 'background-color:yellow; border: 1px solid orange;');", el);
 		highlightElement(el, "grey");
@@ -43,6 +48,7 @@ public abstract class BasePage {
 	}
 
 	// wait
+	@Step()
 	public void sleep(long mills) {
 		try {
 			Thread.sleep(mills);
@@ -51,7 +57,7 @@ public abstract class BasePage {
 		}
 	}
 	
-	
+	@Step()
 	public boolean isCurrentPage(WebElement title, String text) {
 		if(getText(title).equalsIgnoreCase(text))
 			return true;
@@ -59,7 +65,7 @@ public abstract class BasePage {
 			return false;
 	}
 	
-	
+	@Step()
 	public void jScriptPopScreen() {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
 		js.executeScript("alert('Welcome To My Automation Testing');");
@@ -69,11 +75,13 @@ public abstract class BasePage {
 		alt.accept();
 	}
 	
+	@Step()
 	public void refreshPage() {
 		driver.navigate().refresh();
 	}
 	
 	// close driver
+	@Step()
 	public void tearDown() {
 		driver.close();
 	}
