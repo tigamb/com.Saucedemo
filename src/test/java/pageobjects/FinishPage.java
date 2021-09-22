@@ -4,14 +4,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class FinishPage extends BasePage{
+public class FinishPage extends Header{
 
 	@FindBy(css=".complete-header")
 	private WebElement finishMsg;
 	@FindBy(css="#finish")
 	private WebElement finishBtn;
 	@FindBy(css=".header_secondary_container>.title")
-	private WebElement pageTitle;
+	private WebElement finishPageTitle;
 	@FindBy(css="#back-to-products")
 	private WebElement backHomeBtn;
 	
@@ -20,7 +20,7 @@ public class FinishPage extends BasePage{
 	}
 	
 	
-	public String getFinishMsg() {
+	public String getCompleteOrderTitle() {
 		return getText(finishMsg);
 	}
 	
@@ -32,8 +32,8 @@ public class FinishPage extends BasePage{
 		click(backHomeBtn);
 	}
 	
-	public boolean isFinishPage() {
-		return isCurrentPage(pageTitle, "CHECKOUT: COMPLETE!");
+	public boolean isFinishPage(String finishTitle) {
+		return isCurrentPage(finishPageTitle, finishTitle);
 	}
 	
 }

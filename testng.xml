@@ -5,10 +5,16 @@
 		<listener class-name="utilities.Listener"></listener>
 	</listeners>
 	<test thread-count="5" name="Test" parallel="classes">
-		<!-- <parameter name="browser" value="Firefox"></parameter>
-		<parameter name="baseUrl" value="https://www.saucedemo.com"></parameter> -->
+		<!-- <parameter name="browser" value="Firefox"></parameter> <parameter 
+			name="baseUrl" value="https://www.saucedemo.com"></parameter> -->
 		<classes>
 			<class name="tests.SanityTest" />
+			<class name="tests.BuyAll" />
 		</classes>
+
+
+		<!-- <packages> <package name="test"></package> </packages> -->
+
+
 	</test> <!-- Test -->
 </suite> <!-- Suite -->

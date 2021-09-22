@@ -4,7 +4,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class YourInfoPage extends BasePage{
+import utilities.AllureAttachment;
+
+public class YourInfoPage extends Header{
 	
 	@FindBy(css="#first-name")
 	private WebElement firstNameField;
@@ -16,11 +18,22 @@ public class YourInfoPage extends BasePage{
 	private WebElement cancelBtn;
 	@FindBy(css="#continue")
 	private WebElement continuteBtn;
+	@FindBy(css=".title")
+	private WebElement yourInfoPageTitle;
 	
 	public YourInfoPage(WebDriver driver) {
 		super(driver);
 	}
 	
+	
+	public boolean isInfoPgae(String title) {
+		return isCurrentPage(yourInfoPageTitle, title);
+	}
+	
+	
+	public String getInfoPageTitle() {
+		return getText(yourInfoPageTitle);
+	}
 	
 	public void enterValidDetails(String fName, String lName, String zCode) {
 		fillText(firstNameField,fName);
@@ -29,6 +42,13 @@ public class YourInfoPage extends BasePage{
 		sleep(500);
 		fillText(zipCodeField, zCode);
 		sleep(500);
+		AllureAttachment.attachElementScreenshot(continuteBtn); 
+		click(continuteBtn);
+		
+	}
+	
+	public void clickOnContinueBtn() {
+		AllureAttachment.attachElementScreenshot(continuteBtn); 
 		click(continuteBtn);
 	}
 	

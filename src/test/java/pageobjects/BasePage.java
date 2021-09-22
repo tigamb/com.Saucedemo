@@ -1,50 +1,59 @@
 package pageobjects;
 
+import java.util.List;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.qameta.allure.Step;
-
 
 public abstract class BasePage {
 
 	WebDriver driver;
+	WebDriverWait wait;
 	JavascriptExecutor js;
-	
-	// constructor
+
+	// Constructor
 	public BasePage(WebDriver driver) {
 		this.driver = driver;
 		PageFactory.initElements(driver, this);
 		js = (JavascriptExecutor) driver;
 	}
-	
+
 	// fill text method
 	@Step()
 	public void fillText(WebElement el, String text) {
 		el.clear();
-		// js.executeScript("arguments[0].setAttribute('style', 'background-color:yellow; border: 1px solid blue;');", el);
 		highlightElement(el, "yellow");
 		el.sendKeys(text);
+		/*
+		 * if (el.isDisplayed()) { el.clear(); el.sendKeys(text); }
+		 */
+
 	}
 
 	// click method
 	@Step()
 	public void click(WebElement el) {
-		// js.executeScript("arguments[0].setAttribute('style', 'border: 1px solid green;');", el);
 		highlightElement(el, "orange");
 		el.click();
+		/*
+		 * if (el.isDisplayed() || el.isEnabled()) el.click();
+		 */
+
 	}
 
 	// get method
 	@Step()
-	public String getText(WebElement el) {
-		// js.executeScript("arguments[0].setAttribute('style', 'background-color:yellow; border: 1px solid orange;');", el);
-		highlightElement(el, "grey");
-		return el.getText();
+	public String getText(WebElement text) {
+		highlightElement(text, "grey");
+		return text.getText();
+
 	}
 
 	// wait
@@ -56,15 +65,33 @@ public abstract class BasePage {
 			e.printStackTrace();
 		}
 	}
+
+	protected void waitForVisibleOfElement(WebElement el) {
+		wait.until(ExpectedConditions.visibilityOf(el));
+	}
+
+	protected void waitForInVisibleOfElement(WebElement el) {
+		wait.until(ExpectedConditions.invisibilityOf(el));
+	}
+
+	
+	public boolean isListExist(List<WebElement> list) {
+		if (list.size() != 0) {
+			return true;
+		}
+		else
+			return false;
+	}
+
 	
 	@Step()
 	public boolean isCurrentPage(WebElement title, String text) {
-		if(getText(title).equalsIgnoreCase(text))
+		if (getText(title).equalsIgnoreCase(text))
 			return true;
 		else
 			return false;
 	}
-	
+
 	@Step()
 	public void jScriptPopScreen() {
 		JavascriptExecutor js = (JavascriptExecutor) driver;
@@ -74,21 +101,18 @@ public abstract class BasePage {
 		sleep(1000);
 		alt.accept();
 	}
-	
+
 	@Step()
 	public void refreshPage() {
 		driver.navigate().refresh();
 	}
-	
+
 	// close driver
 	@Step()
 	public void tearDown() {
 		driver.close();
 	}
-
-	/*
-	 * Call this method with your element and a color like (red,green,orange etc...)
-	 */
+	
 	protected void highlightElement(WebElement element, String color) {
 		// keep the old style to change it back
 		String originalStyle = element.getAttribute("style");
@@ -104,7 +128,5 @@ public abstract class BasePage {
 				+ originalStyle + "');},400);", element);
 
 	}
-	
-	
 
 }

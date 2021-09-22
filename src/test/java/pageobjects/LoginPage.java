@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import utilities.AllureAttachment;
+
 public class LoginPage extends BasePage {
 
 	@FindBy(css = "#user-name")
@@ -27,24 +29,24 @@ public class LoginPage extends BasePage {
 	}
 	
 	public void login(String user, String pass) {
-		sleep(1000);
 		fillText(userName, user);
 		fillText(password, pass);
+		AllureAttachment.attachElementScreenshot(loginBtn);
 		click(loginBtn);
-		sleep(3000);
+		sleep(2000);
 		
 	}
-
+	
 	public void popUpScreen() {
 		jScriptPopScreen();
-
+		
 	}
 
 	public void returnBtn() {
 		driver.navigate().back();
 	}
 	
-	public String getErrMsg() {
+	public String getErrorMessage() {
 		return getText(errorMsg);
 	}
 	

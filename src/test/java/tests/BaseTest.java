@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -35,7 +34,7 @@ public class BaseTest {
 	String BrowserName;
 	DesiredCapabilities capabilities;
 
-	@SuppressWarnings("deprecation")
+
 	@BeforeClass
 	public void setup(ITestContext testContext) {
 
@@ -44,14 +43,13 @@ public class BaseTest {
 		options.addArguments("disable-blink-features=AutomationControlled");
 		driver = new ChromeDriver(options);
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		//driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		testContext.setAttribute("WebDriver", this.driver);
 		driver.get(Utils.readProperty("url"));
-		wait = new WebDriverWait(driver, 15);
 
 	}
 	
-
+	
 	// Other Option
 	@BeforeClass(enabled=false)
 	@Parameters({ "browser", "baseUrl" })
@@ -80,30 +78,23 @@ public class BaseTest {
 
 	}
 
-	@AfterClass(enabled = false)
+	@AfterClass(enabled = true)
 	public void tearDown() {
 		driver.quit();
 	}
 
-	/*
-	 * This method will run after each test, it will take screen shot only for tests
-	 * that failed
-	 */
+	
 	@AfterMethod
 	public void failedTest(ITestResult result) {
-		// check if the test failed
 		if (result.getStatus() == ITestResult.FAILURE) {
 			TakesScreenshot ts = (TakesScreenshot) driver;
 			File srcFile = ts.getScreenshotAs(OutputType.FILE);
 			try {
 				FileUtils.copyFile(srcFile, new File("./ScreenShots/" + result.getName() + ".jpg"));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			// result.getname() method will give you current test case name.
-			// ./ScreenShots/ tell you that, in your current directory, create folder
-			// ScreenShots. dot represents current directory
+			
 		}
 	}
 
