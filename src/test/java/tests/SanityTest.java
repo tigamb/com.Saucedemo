@@ -25,19 +25,11 @@ public class SanityTest extends BaseTest {
 	@Link("https://www.saucedemo.com/") // Create link to the page
 	@Feature("Login")
 	@Severity(SeverityLevel.BLOCKER)
-	@Test(dataProvider = "sendData", enabled = true, priority = 1, description = "login page")
+	@Test(dataProvider = "sendLoginData", enabled = true, priority = 1)
 	@Description("Login using user name and password and get error messages")
 	public void tc01_login(String username, String password) {
 		LoginPage lp = new LoginPage(driver);
 		lp.login(username, password);
-		/*
-		 * String expected = errorMessage; System.out.println("Expected: " + expected);
-		 * // prints expected error message String actual = lp.getErrorMessage();
-		 * Assert.assertEquals(actual, expected); driver.navigate().refresh(); //
-		 * refresh current page to wipe all data from the fields and get the correct //
-		 * error message AllureAttachment.attachText("login button"); while
-		 * (errorMessage == null) { System.out.println("Success login"); }
-		 */
 
 	}
 
@@ -49,9 +41,9 @@ public class SanityTest extends BaseTest {
 	public void tc02_pickAnItem() {
 		InventoryPage ip = new InventoryPage(driver);
 		String expected = "PRODUCTS";
-		System.out.println("Expected:" + expected);
+		System.out.println("Expected: " + expected);
 		String actual = ip.getInvPageTitle();
-		System.out.println("Actual:" + actual);
+		System.out.println("Actual: " + actual);
 		Assert.assertEquals(actual, expected);
 		AllureAttachment.attachText("Products page");
 		ip.chooseAnItem("Sauce Labs Backpack");
@@ -110,7 +102,7 @@ public class SanityTest extends BaseTest {
 		ovp.clickFinishButton();
 
 	}
-	
+
 	@Owner("Danny Ambaou")
 	@Epic("CHECKOUT: COMPLETE!")
 	@Feature("Checkout complete")
@@ -124,15 +116,17 @@ public class SanityTest extends BaseTest {
 		// fp.returnToProductsPage(); // Click back home button
 
 	}
-	
+
 	@DataProvider
-	public Object[][] sendData() {
+	public Object[][] sendLoginData() {
 		Object[][] myData = {
-				//{ "sard_user", "12345", "Epic sadface: Username and password do not match any user in this service" },
-				//{ "standard_user", "", "Epic sadface: Password is required" },
-				//{ "", "secret_sauce", "Epic sadface: Username is required" },
-				//{ "locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been locked out." },
-				{ "standard_user", "secret_sauce"} };
+				// { "sard_user", "12345", "Epic sadface: Username and password do not match any
+				// user in this service" },
+				// { "standard_user", "", "Epic sadface: Password is required" },
+				// { "", "secret_sauce", "Epic sadface: Username is required" },
+				// { "locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been
+				// locked out." },
+				{ "standard_user", "secret_sauce" } };
 		return myData;
 	}
 

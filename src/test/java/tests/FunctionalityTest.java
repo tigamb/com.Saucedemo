@@ -3,9 +3,7 @@ package tests;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
 import io.qameta.allure.Description;
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Link;
 import io.qameta.allure.Owner;
@@ -19,148 +17,175 @@ import pageobjects.LoginPage;
 import pageobjects.OverViewPage;
 import pageobjects.YourInfoPage;
 import utilities.AllureAttachment;
-import utilities.Excel;
 
 public class FunctionalityTest extends BaseTest {
+	InventoryPage ip;
+	InventoryItemPage iip;
+	CartPage cp;
+	YourInfoPage yip;
+	OverViewPage ovp;
+	FinishPage fp;
 
 	@Owner("Danny Ambaou")
-	@Link("https://www.saucedemo.com/") // Create link to the page
+	@Link("https://www.saucedemo.com/")
 	@Feature("Login")
 	@Severity(SeverityLevel.BLOCKER)
-	@Test(dataProvider = "loginDetails", enabled = true, priority = 1, description = "login page")
+	@Test(dataProvider = "loginDetails", enabled = true, priority = 1)
 	@Description("Login using user name and password and get error messages")
 	public void tc01_login(String username, String password, String errorMessage) {
 		LoginPage lp = new LoginPage(driver);
 		lp.login(username, password);
 		String expected = errorMessage;
-		System.out.println("Expected: " + expected); // prints expected error message
+		System.out.println("Expected: " + expected);
 		String actual = lp.getErrorMessage();
 		Assert.assertEquals(actual, expected);
-		driver.navigate().refresh(); // refresh current page to wipe all data from the fields and get the correct //
+		driver.navigate().refresh(); // Refresh current page to wipe all data from the fields
 		AllureAttachment.attachText("login button");
-		while (errorMessage == null) {
-			System.out.println("Success login");
-		}
 
 	}
 
-	@Test(priority = 5, description = "Pick an item")
-	public void tc02_pickAnItem() {
-		InventoryPage ip = new InventoryPage(driver);
-		ip.chooseAnItem("Sauce Labs Backpack");
-		
-	}
-
-	@Epic("Products")
-	@Feature("Add to cart")
-	@Test(priority = 6, description = "add an item to your cart")
-	public void tc03__addItemsToCart() {
-		InventoryItemPage iip = new InventoryItemPage(driver);
-		iip.addToCart();
-		iip.openCart();
-	}
-
-	@Epic("Cart")
-	@Feature("Checkout")
-	@Test(priority = 7, description = " Click on checkout button")
-	public void tc04_checkout() {
-		CartPage cp = new CartPage(driver);
-		cp.checkOut();
-
-	}
-
-	@Test(priority = 8, description = " Insert valid details and click continue")
-	public void tc05_insertYourInfo() {
-		YourInfoPage yip = new YourInfoPage(driver);
-		yip.enterValidDetails("danny", "test", "123456");
-
-	}
-
-	@Owner("Danny Ambaou")
-	@Epic("CHECKOUT: OVERVIEW")
-	@Feature("Checkout step two")
+	@Feature("Add button from inventory item page")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 9, description = " Insert valid details and click continue")
-	public void tc06_overViewPage() {
-		OverViewPage ovp = new OverViewPage(driver);
-		Assert.assertTrue(ovp.isOverViewPage("CHECKOUT: OVERVIEW"));
-		ovp.clickFinishButton();
-
-	}
-
-	@Owner("Danny Ambaou")
-	@Epic("CHECKOUT: COMPLETE!")
-	@Feature("Checkout complete")
-	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 10, description = " Click finish button to complete your order")
-	public void tc07_completeOrder() {
-		FinishPage fp = new FinishPage(driver);
-		Assert.assertTrue(fp.isFinishPage("")); // return true if this is the correct page
-		System.out.println(fp.getCompleteOrderTitle()); // prints finish message
-		fp.returnToProductsPage(); // Click back home button
-
-	}
-
-	@Test(enabled = false, priority = 11, description = "Verify you are on products page and buy few items")
-	@Description("Add all items to the cart")
-	public void tc08_addAllItemsToCart() {
-		InventoryPage ip = new InventoryPage(driver); // Create an inventoryPage object
-		// Assert.assertTrue(ip.isProductPage("Products")); // Verify products page
-		InventoryItemPage iip = new InventoryItemPage(driver);
+	@Test(enabled = true, priority = 2)
+	@Description("Choose items by name, click on them, move to product page and click add button")
+	public void tc02_addItemsToCartByName() {
+		ip = new InventoryPage(driver);
+		Assert.assertTrue(ip.isInventoryPage("PRODUCTS"));
+		iip = new InventoryItemPage(driver);
 		ip.chooseAnItem("Sauce Labs Backpack");
 		iip.addToCart();
 		iip.backToProductsButton();
 		ip.chooseAnItem("Sauce Labs Bolt T-Shirt");
-		iip.addToCart(); 
+		iip.addToCart();
 		iip.backToProductsButton();
 		ip.chooseAnItem("Sauce Labs Onesie");
-		iip.addToCart(); 
-		iip.backToProductsButton();
-		ip.chooseAnItem("Sauce Labs Bike Light"); 
 		iip.addToCart();
-		iip.backToProductsButton(); 
+		iip.backToProductsButton();
+		ip.chooseAnItem("Sauce Labs Bike Light");
+		iip.addToCart();
+		iip.backToProductsButton();
 		ip.chooseAnItem("Sauce Labs Fleece Jacket");
-		iip.addToCart(); 
+		iip.addToCart();
 		iip.backToProductsButton();
 		ip.chooseAnItem("Test.allTheThings() T-Shirt (Red)");
+		iip.addToCart();
 		iip.openCart();
-		
-		/*
-		 * CartPage cp = new CartPage(driver); int numOfItemsBeforeRemoving =
-		 * cp.getNumOfItems(); cp.removeItems("Sauce Labs Bike Light");
-		 * cp.removeItems("Sauce Labs Fleece Jacket");
-		 * cp.removeItems("Sauce Labs Onesie"); int numOfItemsAfterRemoving =
-		 * cp.getNumOfItems(); Assert.assertEquals(numOfItemsBeforeRemoving,
-		 * numOfItemsAfterRemoving);
-		 */
+	}
+
+	@Severity(SeverityLevel.NORMAL)
+	@Feature("Remove button from cart page")
+	@Description("Remove items by name from the cart")
+	@Test(priority = 3)
+	public void tc03_removeItemsFromCartByName() {
+		cp = new CartPage(driver);
+		String expectedCartPage = "YOUR CART";
+		System.out.println("Expected:" + expectedCartPage);
+		String actualCartPage = cp.getCartPageTitle();
+		Assert.assertTrue(cp.isCartPage(expectedCartPage));
+		System.out.println("Actual: " + actualCartPage);
+		int numOfItemsBeforeRemoving = cp.getNumOfItems();
+		System.out.println("Items before deleted: " + cp.getNumOfItems());
+		if (cp.getNumOfItems() <= 6) {
+			cp.removeItemsFromCart("Sauce Labs Bike Light");
+			cp.removeItemsFromCart("Sauce Labs Fleece Jacket");
+			cp.removeItemsFromCart("Sauce Labs Onesie");
+			cp.removeItemsFromCart("Test.allTheThings() T-Shirt (Red)");
+		} else if (cp.getNumOfItems() == 0)
+			System.out.println("Cart is empty!");
+		else
+			System.out.println("You have more than 6 items in your cart");
+		int numOfItemsAfterRemoving = cp.getNumOfItems();
+		System.out.println("Items after deleted: " + cp.getNumOfItems());
+		Assert.assertNotSame(numOfItemsBeforeRemoving, numOfItemsAfterRemoving);
+		cp.checkOut();
 
 	}
 
-	/*
-	 * public void tc09_delete_item_from_cart() { CartPage cp = new
-	 * CartPage(driver);
-	 * 
-	 * int numOfItemsBeforeRemoving = cp.getNumOfItems();
-	 * cp.removeItems("Sauce Labs Bolt T-Shirt");
-	 * cp.removeItems("Sauce Labs Fleece Jacket");
-	 * cp.removeItems("Sauce Labs Onesie"); int numOfItemsAfterRemoving =
-	 * cp.getNumOfItems(); Assert.assertEquals(numOfItemsBeforeRemoving,
-	 * numOfItemsAfterRemoving);
-	 * 
-	 * 
-	 * }
-	 */
+	@Test(dataProvider = "yourInfoData", priority = 4)
+	public void tc04_insertDetails(String firstName, String lastName, String zipCode, String errorMsg) {
+		yip = new YourInfoPage(driver);
+		String expectedInfoPage = "CHECKOUT: YOUR INFORMATION";
+		System.out.println("Expected " + expectedInfoPage);
+		String actualInfoPage = yip.getInfoPageTitle();
+		System.out.println("Actual " + actualInfoPage);
+		Assert.assertTrue(yip.isInfoPgae(expectedInfoPage));
 
-	@DataProvider
-	public Object[][] itemsList() {
-		Object[][] myData = { { "Sauce Labs Backpack" }, 
-				{ "Sauce Labs Bolt T-Shirt" }, 
-				{ "Sauce Labs Onesie" },
-				{ "Sauce Labs Bike Light" }, 
-				{ "Sauce Labs Fleece Jacket" }, 
-				{ "Test.allTheThings() T-Shirt (Red)" } };
+		yip.enterValidDetails(firstName, lastName, zipCode);
+		// yip.clickOnContinueBtn();
+		String expectedErrorMsg = errorMsg;
+		System.out.println("Expected Error" + expectedErrorMsg);
+		String actualErrMsg = yip.getErrorMessage();
+		System.out.println("Actual Error: " + actualErrMsg);
+		Assert.assertEquals(actualErrMsg, expectedErrorMsg);
+		driver.navigate().refresh();
 
-		return myData;
+	}
+
+	@Test(priority = 5)
+	public void tc05_getTotalPrice() {
+		ovp = new OverViewPage(driver);
+		System.out.println("Price" + ovp.getTotalPrice());
+		ovp.clickFinishButton();
+	}
+
+	@Test(priority = 6)
+	public void tc06_getFinishPageTitle() {
+		fp = new FinishPage(driver);
+		String expectedFinishPage = "CHECKOUT: COMPLETE!";
+		System.out.println("Expected " + expectedFinishPage);
+		String actualFinishPage = fp.getCompleteOrderTitle();
+		System.out.println("Actual " + actualFinishPage);
+		Assert.assertTrue(fp.isFinishPage(expectedFinishPage));
+		fp.returnToProductsPage();
+	}
+
+	@Feature("Add button from InventoryPage")
+	@Description("Add all items from products page to cart")
+	@Test(priority = 7)
+	public void tc07_addItemsFromInventoryPage() {
+		ip.addAllItemsToCart(); // add all items to cart
+		ip.openCart();
+		cp.continueShoppingBtn(); // return to products page
+	}
+
+	@Severity(SeverityLevel.NORMAL)
+	@Feature("Remove button from InventoryPage")
+	@Description("Remove all items from previous test")
+	@Test(priority = 8)
+	public void tc08_removeItemsFromInventoryPage() {
+		ip.removeAllItemsFromCart(); // remove all items from the cart
+		ip.openCart();
+		cp.checkOut();
+		yip.enterValidDetails("for", "test", "only");
+		ovp.getTotalPrice();
+	}
+
+	@Feature("Total price")
+	@Severity(SeverityLevel.CRITICAL)
+	@Test(priority = 9)
+	@Description("Check total price - if it equals 0.00 it means the cart is empty")
+	public void tc09_checkIfCartIsEmpty() {
+		if (ovp.getTotalPrice().equalsIgnoreCase("Total: $0.00")) {
+			ovp.clickFinishButton();
+			fp.getCompleteOrderTitle();
+			System.out.println("Complete title: " + fp.getCompleteOrderTitle());
+			System.out.println("You have made an order with 0 items");
+
+		} else {
+			System.out.println("Old Price: " + ovp.getTotalPrice());
+			ovp.clickOnCancelBtn();
+			ip.chooseAnItem("Sauce Labs Backpack");
+			iip.addToCart();
+			iip.openCart();
+			cp.checkOut();
+			yip.enterValidDetails("one", "item", "only");
+			ovp.getTotalPrice();
+			System.out.println("New price " + ovp.getTotalPrice());
+			ovp.clickFinishButton();
+			fp.getCompleteOrderTitle();
+			System.out.println("Complete title: " + fp.getCompleteOrderTitle());
+		}
+
 	}
 
 	@DataProvider
@@ -174,11 +199,15 @@ public class FunctionalityTest extends BaseTest {
 		return myData;
 	}
 
-	@DataProvider // CHEKC FOR MORE DETAILS ONLINE
-	public Object[][] getDataFromExcel() {
-		String excelPath = System.getProperty("user.dir") + "\\src\\test\\resources\\data\\input.xlsx";
-		Object[][] table = Excel.getTableArray(excelPath, "Login");
-		return table;
+	@DataProvider
+	public Object[][] yourInfoData() {
+		Object[][] myData = { { "firstNameOnly", "", "", "Error: Last Name is required" },
+				{ "", "lastNameOnly", "", "Error: First Name is required" },
+				{ "", "", "zipCodeOnly", "Error: First Name is required" },
+				{ "firstName", "lastName", "", "Error: Postal Code is required" },
+				{ "firstName", "", "zipCode", "Error: Last Name is required" },
+				{ "firstName", "lastName", "zipCode", null } };
+		return myData;
 	}
 
 }

@@ -20,6 +20,8 @@ public class YourInfoPage extends Header{
 	private WebElement continuteBtn;
 	@FindBy(css=".title")
 	private WebElement yourInfoPageTitle;
+	@FindBy(css=".error-message-container.error")
+	private WebElement error;
 	
 	public YourInfoPage(WebDriver driver) {
 		super(driver);
@@ -30,6 +32,10 @@ public class YourInfoPage extends Header{
 		return isCurrentPage(yourInfoPageTitle, title);
 	}
 	
+	
+	public String getErrorMessage() {
+		return getText(error);
+	}
 	
 	public String getInfoPageTitle() {
 		return getText(yourInfoPageTitle);
