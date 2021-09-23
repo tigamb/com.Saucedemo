@@ -1,1 +1,1 @@
-# com.Saucedemo
+# com.Saucedemo - Automation Project
