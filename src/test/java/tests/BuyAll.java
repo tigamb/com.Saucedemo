@@ -40,7 +40,7 @@ public class BuyAll extends BaseTest {
 		System.out.println("Expected: " + expected);
 		String actual = lp.getErrorMessage();
 		Assert.assertEquals(actual, expected);
-		driver.navigate().refresh(); // Refresh current page to wipe all data from the fields
+		driver.navigate().refresh(); 
 		AllureAttachment.attachText("login button");
 
 	}
@@ -53,7 +53,7 @@ public class BuyAll extends BaseTest {
 		cp = new CartPage(driver);
 		yip = new YourInfoPage(driver);
 		ovp = new OverViewPage(driver);
-		ip.addAllItemsToCart(); // add all items to cart
+		ip.addAllItemsToCart();
 		ip.openCart();
 		cp.checkOut();
 		yip.enterValidDetails("4trr", "gdfg", "kjkg");

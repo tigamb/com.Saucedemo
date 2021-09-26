@@ -16,7 +16,6 @@ import pageobjects.InventoryPage;
 import pageobjects.LoginPage;
 import pageobjects.OverViewPage;
 import pageobjects.YourInfoPage;
-import utilities.AllureAttachment;
 
 public class FunctionalityTest extends BaseTest {
 	InventoryPage ip;
@@ -28,7 +27,7 @@ public class FunctionalityTest extends BaseTest {
 
 	@Owner("Danny Ambaou")
 	@Link("https://www.saucedemo.com/")
-	@Feature("Login")
+	@Feature("Login page")
 	@Severity(SeverityLevel.BLOCKER)
 	@Test(dataProvider = "loginDetails", enabled = true, priority = 1)
 	@Description("Login using user name and password and get error messages")
@@ -39,18 +38,19 @@ public class FunctionalityTest extends BaseTest {
 		System.out.println("Expected: " + expected);
 		String actual = lp.getErrorMessage();
 		Assert.assertEquals(actual, expected);
-		driver.navigate().refresh(); // Refresh current page to wipe all data from the fields
-		AllureAttachment.attachText("login button");
+		driver.navigate().refresh();
 
 	}
 
-	@Feature("Add button from inventory item page")
+	@Feature("Add button - inventory item page")
 	@Severity(SeverityLevel.NORMAL)
 	@Test(enabled = true, priority = 2)
 	@Description("Choose items by name, click on them, move to product page and click add button")
 	public void tc02_addItemsToCartByName() {
 		ip = new InventoryPage(driver);
-		Assert.assertTrue(ip.isInventoryPage("PRODUCTS"));
+		String expectedInvPage = "PRODUCTS";
+		String actualInvPage = ip.getInvPageTitle();
+		Assert.assertEquals(actualInvPage, expectedInvPage);
 		iip = new InventoryItemPage(driver);
 		ip.chooseAnItem("Sauce Labs Backpack");
 		iip.addToCart();
@@ -72,17 +72,17 @@ public class FunctionalityTest extends BaseTest {
 		iip.openCart();
 	}
 
+	@Feature("Remove button - cart page")
 	@Severity(SeverityLevel.NORMAL)
-	@Feature("Remove button from cart page")
 	@Description("Remove items by name from the cart")
 	@Test(priority = 3)
 	public void tc03_removeItemsFromCartByName() {
 		cp = new CartPage(driver);
 		String expectedCartPage = "YOUR CART";
-		System.out.println("Expected:" + expectedCartPage);
+		System.out.println("Expected CartPage " + expectedCartPage);
 		String actualCartPage = cp.getCartPageTitle();
-		Assert.assertTrue(cp.isCartPage(expectedCartPage));
-		System.out.println("Actual: " + actualCartPage);
+		Assert.assertEquals(actualCartPage, expectedCartPage);
+		System.out.println("Actual CartPage " + actualCartPage);
 		int numOfItemsBeforeRemoving = cp.getNumOfItems();
 		System.out.println("Items before deleted: " + cp.getNumOfItems());
 		if (cp.getNumOfItems() <= 6) {
@@ -101,7 +101,10 @@ public class FunctionalityTest extends BaseTest {
 
 	}
 
+	@Feature("Verify empty fields")
+	@Severity(SeverityLevel.MINOR)
 	@Test(dataProvider = "yourInfoData", priority = 4)
+	@Description("Insert details using dataProvider and check the fields")
 	public void tc04_insertDetails(String firstName, String lastName, String zipCode, String errorMsg) {
 		yip = new YourInfoPage(driver);
 		String expectedInfoPage = "CHECKOUT: YOUR INFORMATION";
@@ -109,9 +112,7 @@ public class FunctionalityTest extends BaseTest {
 		String actualInfoPage = yip.getInfoPageTitle();
 		System.out.println("Actual " + actualInfoPage);
 		Assert.assertTrue(yip.isInfoPgae(expectedInfoPage));
-
 		yip.enterValidDetails(firstName, lastName, zipCode);
-		// yip.clickOnContinueBtn();
 		String expectedErrorMsg = errorMsg;
 		System.out.println("Expected Error" + expectedErrorMsg);
 		String actualErrMsg = yip.getErrorMessage();
@@ -121,13 +122,22 @@ public class FunctionalityTest extends BaseTest {
 
 	}
 
+	@Feature("Total price")
+	@Severity(SeverityLevel.CRITICAL)
+	@Description("Get total price from over view page and click finish button")
 	@Test(priority = 5)
 	public void tc05_getTotalPrice() {
 		ovp = new OverViewPage(driver);
+		String expectedOvPage = "CHECKOUT: OVERVIEW";
+		String actualOvPage = ovp.getPageTitle();
+		Assert.assertEquals(actualOvPage, expectedOvPage);
 		System.out.println("Price" + ovp.getTotalPrice());
 		ovp.clickFinishButton();
 	}
 
+	@Feature("Verify complete order")
+	@Severity(SeverityLevel.MINOR)
+	@Description("Verify finish page and get order complete title")
 	@Test(priority = 6)
 	public void tc06_getFinishPageTitle() {
 		fp = new FinishPage(driver);
@@ -139,21 +149,24 @@ public class FunctionalityTest extends BaseTest {
 		fp.returnToProductsPage();
 	}
 
+
 	@Feature("Add button from InventoryPage")
+	@Severity(SeverityLevel.NORMAL)
 	@Description("Add all items from products page to cart")
 	@Test(priority = 7)
 	public void tc07_addItemsFromInventoryPage() {
-		ip.addAllItemsToCart(); // add all items to cart
+		ip.addAllItemsToCart();
 		ip.openCart();
-		cp.continueShoppingBtn(); // return to products page
+		cp.continueShoppingBtn();
 	}
 
-	@Severity(SeverityLevel.NORMAL)
+
 	@Feature("Remove button from InventoryPage")
+	@Severity(SeverityLevel.NORMAL)
 	@Description("Remove all items from previous test")
 	@Test(priority = 8)
 	public void tc08_removeItemsFromInventoryPage() {
-		ip.removeAllItemsFromCart(); // remove all items from the cart
+		ip.removeAllItemsFromCart(); 
 		ip.openCart();
 		cp.checkOut();
 		yip.enterValidDetails("for", "test", "only");

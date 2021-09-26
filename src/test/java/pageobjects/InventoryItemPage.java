@@ -44,7 +44,7 @@ public class InventoryItemPage extends Header{
 	*/
 	
 	public String getPageTitle() {
-		return getText(addOrRemoveButton);
+		return getText(backButton);
 	}
 	
 	

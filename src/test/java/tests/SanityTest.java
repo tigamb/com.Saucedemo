@@ -29,104 +29,111 @@ public class SanityTest extends BaseTest {
 	@Description("Login using user name and password and get error messages")
 	public void tc01_login(String username, String password) {
 		LoginPage lp = new LoginPage(driver);
+		String expectedLoginPage = "Password for all users:";
+		System.out.println("Expected: " +expectedLoginPage);
+		String actualLoginPage = lp.checkLoginPage();
+		System.out.println("Actual: " +actualLoginPage + "\n");
+		Assert.assertEquals(actualLoginPage, expectedLoginPage);
 		lp.login(username, password);
 
 	}
 
-	@Owner("Danny Ambaou")
 	@Epic("INVENTORY")
 	@Feature("Product details, add to cart")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 2, description = "Pick an item")
+	@Description("Pick an item")
+	@Test(priority = 2)
 	public void tc02_pickAnItem() {
 		InventoryPage ip = new InventoryPage(driver);
 		String expected = "PRODUCTS";
 		System.out.println("Expected: " + expected);
 		String actual = ip.getInvPageTitle();
-		System.out.println("Actual: " + actual);
+		System.out.println("Actual: " + actual +"\n");
 		Assert.assertEquals(actual, expected);
 		AllureAttachment.attachText("Products page");
 		ip.chooseAnItem("Sauce Labs Backpack");
 
 	}
 
-	@Owner("Danny Ambaou")
 	@Epic("INVENTORY-ITEM")
 	@Feature("Add to cart")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 3, description = "Add an item to your cart")
+	@Description("Add an item to your cart")
+	@Test(priority = 3)
 	public void tc03__addItemsToCart() {
 		InventoryItemPage iip = new InventoryItemPage(driver);
+		String expectedIip = "BACK TO PRODUCTS";
+		System.out.println("Expected: " +expectedIip);
+		String actualIip = iip.getPageTitle();
+		System.out.println("Actual: " +actualIip + "\n");
+		Assert.assertEquals(actualIip, expectedIip);
 		iip.addToCart();
 		iip.openCart();
 	}
 
-	@Owner("Danny Ambaou")
 	@Epic("YOUR CART")
 	@Feature("Checkout button")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 4, description = " Click on checkout button")
+	@Description("Click on checkout button")
+	@Test(priority = 4)
 	public void tc04_checkout() {
 		CartPage cp = new CartPage(driver);
-		AllureAttachment.attachText("Checkout button");
+		String expectedCartPage = "YOUR CART";
+		System.out.println("Expected: " +expectedCartPage);
+		String actualCartPage = cp.getCartPageTitle();
+		System.out.println("Actual: " +actualCartPage + "\n");
+		Assert.assertEquals(actualCartPage, expectedCartPage);
 		cp.checkOut();
 	}
 
-	@Owner("Danny Ambaou")
 	@Epic("CHECKOUT: YOUR INFORMATION")
 	@Feature("Checkout Step one")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 5, description = "Insert valid details and click continue")
+	@Description("Insert valid details and click continue")
+	@Test(priority = 5)
 	public void tc05_insertYourInfo() {
 		YourInfoPage yip = new YourInfoPage(driver);
-		AllureAttachment.attachText("Checkout-ste-one");
+		String expectedYourInfoPage = "CHECKOUT: YOUR INFORMATION";
+		System.out.println("Actual: " +expectedYourInfoPage);
+		String actualYourInfoPage = yip.getInfoPageTitle();
+		System.out.println("Actual: " +actualYourInfoPage + "\n");
+		Assert.assertEquals(actualYourInfoPage, expectedYourInfoPage);
 		yip.enterValidDetails("danny", "test", "123456");
 
 	}
 
-	@Owner("Danny Ambaou")
 	@Epic("CHECKOUT: OVERVIEW")
 	@Feature("Checkout step two")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 6, description = " Insert valid details and click continue")
+	@Description("Insert valid details and click continue")
+	@Test(priority = 6)
 	public void tc06_overViewPage() {
 		OverViewPage ovp = new OverViewPage(driver);
-		// Assert.assertTrue(ovp.isOverViewPage("CHECKOUT: OVERVIEW"));
-
 		String expected = "CHECKOUT: OVERVIEW";
 		System.out.println("Expected:" + expected);
 		String actual = ovp.getPageTitle();
-		System.out.println("Actual:" + actual);
+		System.out.println("Actual:" + actual +"\n");
 		Assert.assertEquals(actual, expected);
-		AllureAttachment.attachText("Checkout-ste-two");
 		ovp.clickFinishButton();
 
 	}
 
-	@Owner("Danny Ambaou")
 	@Epic("CHECKOUT: COMPLETE!")
 	@Feature("Checkout complete")
 	@Severity(SeverityLevel.NORMAL)
-	@Test(priority = 7, description = " Click finish button to complete your order")
+	@Description("Click finish button to complete your order")
+	@Test(priority = 7)
 	public void tc07_completeOrder() {
 		FinishPage fp = new FinishPage(driver);
 		String expected = "CHECKOUT: COMPLETE!";
-		Assert.assertTrue(fp.isFinishPage(expected)); // Return true if this is the correct page
-		System.out.println(fp.getCompleteOrderTitle()); // Prints complete order title
-		// fp.returnToProductsPage(); // Click back home button
+		Assert.assertTrue(fp.isFinishPage(expected));
+		System.out.println(fp.getCompleteOrderTitle());
 
 	}
-
+	
 	@DataProvider
 	public Object[][] sendLoginData() {
-		Object[][] myData = {
-				// { "sard_user", "12345", "Epic sadface: Username and password do not match any
-				// user in this service" },
-				// { "standard_user", "", "Epic sadface: Password is required" },
-				// { "", "secret_sauce", "Epic sadface: Username is required" },
-				// { "locked_out_user", "secret_sauce", "Epic sadface: Sorry, this user has been
-				// locked out." },
-				{ "standard_user", "secret_sauce" } };
+		Object[][] myData = { { "standard_user", "secret_sauce" } };
 		return myData;
 	}
 
